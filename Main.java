@@ -14,7 +14,8 @@ public class Main {
 
             // set vars
             IloIntVar next_i = cp.intVar(0, 10); //next node to be visited after node i
-            IloNumVar distance_at_i = cp.numVar(0, 10); // incurred distance at node i
+            IloNumVar distance_at_i = cp.numVar(0, 0); // incurred distance at node i
+                            // forces the distance at i to be 0 (as it was supposed to be a depot)
             IloNumVar distance_at_j = cp.numVar(0, 10);// incurred distance at node j
 
             // set constraints
@@ -45,14 +46,6 @@ public class Main {
             //          j
             //          )
             //    );
-
-            // forces the distance at i to be 0 (as it was supposed to be a depot)
-            cp.add(
-                    cp.eq(
-                        distance_at_i, 
-                        0
-                        )
-                  );
 
             if (cp.solve()) {
                 System.out.println("Solved");
