@@ -4,22 +4,40 @@ import ilog.concert.*;
 public class Main {
     public static void main(String[] args) {
         try {
+
+            // params
+            int j = 10;
+            double DISTANCE_IJ = 4.5;
+
+            // init model
             IloCP cp = new IloCP();
 
-            IloIntVar x = cp.intVar(0, 10);
-            IloIntVar p = cp.intVar(0, 10);
-            IloNumVar q = cp.numVar(0, 10);
-           
-            IloConstraint eq = cp.eq(x, 10);
+            // set vars
+            IloIntVar next_i = cp.intVar(0, 10); //next node to be visited after node i
+            IloNumVar distance_at_i = cp.numVar(0, 10); // incurred distance at node i
+            IloNumVar distance_at_j = cp.numVar(0, 10);// incurred distance at node j
 
-            IloConstraint eq1 = cp.eq(cp.diff(p, q), -5);
-            IloConstraint ifThen = cp.ifThen(eq, eq1);
-            
-            cp.add(ifThen);
+            // set constraints
 
-            if (cp.solve()) {
+            // if next node of i is j then update distance at j
+            cp.add(
+                    cp.ifThen(
+                        cp.eq(next_i, j), 
+                        cp.eq(cp.diff(distance_at_i, distance_at_j), - DISTANCE_IJ)
+                        )
+                  );
+
+            // forces the distance at i to be 0 (as it was supposed to be a depot)
+            cp.add(
+                    cp.eq(
+                        distance_at_i, 
+                        0
+                        )
+                  );
+
+            if (cp.solve()) 
                 System.out.println("Solved");
-            } else
+            else
                 System.out.println("Not solved");
 
         } catch (IloException e) {
