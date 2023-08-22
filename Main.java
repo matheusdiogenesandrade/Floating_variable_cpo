@@ -27,6 +27,16 @@ public class Main {
                         )
                   );
 
+            // edge case, since CPO requires the floating variables to have fixed value when 
+            // all the discrete variables are setted, we say that if arc ij does not exist
+            // simply set the distance_at_j to 0
+            cp.add(
+                    cp.ifThen(
+                        cp.neq(next_i, j), 
+                        cp.eq(distance_at_j, 0)
+                        )
+                  );
+
             // forces the distance at i to be 0 (as it was supposed to be a depot)
             cp.add(
                     cp.eq(
@@ -35,9 +45,14 @@ public class Main {
                         )
                   );
 
-            if (cp.solve()) 
+            if (cp.solve()) {
                 System.out.println("Solved");
-            else
+
+                System.out.println(cp.getValue(next_i));
+                System.out.println(cp.getValue(distance_at_i));
+                System.out.println(cp.getValue(distance_at_j));
+
+            } else
                 System.out.println("Not solved");
 
         } catch (IloException e) {
