@@ -37,6 +37,15 @@ public class Main {
                         )
                   );
 
+            // for seeing the behaviour of when the next_i = j,
+            // just uncomment the snippet below
+            //cp.add(
+            //      cp.eq(
+            //          next_i, 
+            //          j
+            //          )
+            //    );
+
             // forces the distance at i to be 0 (as it was supposed to be a depot)
             cp.add(
                     cp.eq(
